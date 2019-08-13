@@ -1,0 +1,6 @@
+{"description":"Write Lexer","entry":"20190813T094802Z","modified":"20190813T094802Z","status":"pending","uuid":"d9bf0566-55a9-4c1b-819e-4d993880a437"}
+{"description":"Write simple Parser","entry":"20190813T094810Z","modified":"20190813T094810Z","status":"pending","uuid":"72c8ec13-b876-4863-bf7d-5506658f5b9a"}
+{"description":"Handle simple main.rs","entry":"20190813T094818Z","modified":"20190813T094818Z","status":"pending","uuid":"aebf4c92-a459-49dd-936d-2ec8a9928e67"}
+{"description":"Write Lexer","entry":"20190813T094802Z","modified":"20190813T094857Z","status":"pending","tags":["parsing"],"uuid":"d9bf0566-55a9-4c1b-819e-4d993880a437"}
+{"description":"Write simple Parser","entry":"20190813T094810Z","modified":"20190813T094857Z","status":"pending","tags":["parsing"],"uuid":"72c8ec13-b876-4863-bf7d-5506658f5b9a"}
+{"description":"Handle simple main.rs","entry":"20190813T094818Z","modified":"20190813T094909Z","status":"pending","tags":["testing"],"uuid":"aebf4c92-a459-49dd-936d-2ec8a9928e67"}

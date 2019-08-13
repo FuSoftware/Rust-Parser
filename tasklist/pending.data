@@ -1,0 +1,3 @@
+[description:"Write Lexer" entry:"1565689682" modified:"1565689737" status:"pending" tags:"parsing" uuid:"d9bf0566-55a9-4c1b-819e-4d993880a437"]
+[description:"Write simple Parser" entry:"1565689690" modified:"1565689737" status:"pending" tags:"parsing" uuid:"72c8ec13-b876-4863-bf7d-5506658f5b9a"]
+[description:"Handle simple main.rs" entry:"1565689698" modified:"1565689749" status:"pending" tags:"testing" uuid:"aebf4c92-a459-49dd-936d-2ec8a9928e67"]
