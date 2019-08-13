@@ -7,8 +7,8 @@ pub struct Token {
 } impl Token {
     pub fn new (token_type: TokenType, data: String) -> Token {
         Token {
-            token_type : token_type,
-            data: data,
+            token_type,
+            data,
         }
     }
 
@@ -39,24 +39,24 @@ pub enum TokenType {
 } impl TokenType {
     pub fn label(&self) -> &str {
         match self {
-            &TokenType::OpenBrace => "Open Brace",
-            &TokenType::CloseBrace => "Close Brace",
-            &TokenType::OpenParenthesis => "Open Parenthesis",
-            &TokenType::CloseParenthesis => "Close Parenthesis",
-            &TokenType::Identifier => "Identifier",
-            &TokenType::Semicolon => "Semicolon",
-            &TokenType::Keyword => "Keyword",
-            &TokenType::Integer => "Integer",
-            &TokenType::Invalid => "Invalid",
-            &TokenType::Whitespace => "Whitespace",
-            &TokenType::ReturnType => "Return Type",
-            &TokenType::Operator => "Operator",
+            TokenType::OpenBrace => "Open Brace",
+            TokenType::CloseBrace => "Close Brace",
+            TokenType::OpenParenthesis => "Open Parenthesis",
+            TokenType::CloseParenthesis => "Close Parenthesis",
+            TokenType::Identifier => "Identifier",
+            TokenType::Semicolon => "Semicolon",
+            TokenType::Keyword => "Keyword",
+            TokenType::Integer => "Integer",
+            TokenType::Invalid => "Invalid",
+            TokenType::Whitespace => "Whitespace",
+            TokenType::ReturnType => "Return Type",
+            TokenType::Operator => "Operator",
             _ => "Undefined"
         }
     }
 }
 
-static keywords: &'static [&'static str] = &[
+static KEYWORDS: &[&str] = &[
     "u8",
     "i8",
     "u16",
@@ -86,7 +86,7 @@ pub struct Lexer {
             s.push(self.reader.next());
         }
 
-        return s;
+        s
     }
 
     pub fn next(&mut self) -> Token {
@@ -117,7 +117,7 @@ pub struct Lexer {
                     let mut s: String = self.read_while(&Lexer::is_alphanumeric);
                     s.insert(0, c);
 
-                    if keywords.contains(&s.as_str()) {
+                    if KEYWORDS.contains(&s.as_str()) {
                         tt = TokenType::Keyword;
                     }
 
