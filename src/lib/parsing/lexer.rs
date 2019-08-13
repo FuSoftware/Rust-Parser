@@ -79,7 +79,7 @@ pub struct Lexer {
         }
     }
 
-    pub fn read_while(&mut self, f: &Fn(char) -> bool) -> String {
+    pub fn read_while(&mut self, f: impl Fn(char) -> bool) -> String {
         let mut s: String = String::new();
 
         while !self.reader.eof() && f(self.reader.peek()) {
@@ -114,7 +114,7 @@ pub struct Lexer {
                     }
                 }
                 TokenType::Identifier => {
-                    let mut s: String = self.read_while(&Lexer::is_alphanumeric);
+                    let mut s: String = self.read_while(Lexer::is_alphanumeric);
                     s.insert(0, c);
 
                     if keywords.contains(&s.as_str()) {
@@ -124,12 +124,12 @@ pub struct Lexer {
                     Token::new(tt, s)
                 },
                 TokenType::Integer => {
-                    let mut s: String = self.read_while(&Lexer::is_integer);
+                    let mut s: String = self.read_while(Lexer::is_integer);
                     s.insert(0, c);
                     Token::new(tt, s)
                 },
                 TokenType::Whitespace => {
-                    self.read_while(&Lexer::is_whitespace);
+                    self.read_while(Lexer::is_whitespace);
                     Token::new(tt,String::new())
                 },
                 _ => Token::new(tt,String::from(""))
