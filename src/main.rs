@@ -1,6 +1,6 @@
 mod lib;
-use std::fs;
 use lib::parsing::lexer::*;
+use std::fs;
 
 fn main() {
     let s: String = fs::read_to_string("sample/main.rs").unwrap();
@@ -14,17 +14,11 @@ fn main() {
 
         let tt: TokenType = t.token_type;
         let td: String = t.data;
-        
-        match tt {
-            TokenType::EOF => {
-                break;
-            }
-            TokenType::Whitespace => {
 
-            },
-            _ => {
-                println!("{:20} : {}", tt.label(), td);
-            }
-        } 
+        match tt {
+            TokenType::EOF => break,
+            TokenType::Whitespace => (),
+            _ => println!("{:20} : {}", tt.label(), td),
+        }
     }
 }

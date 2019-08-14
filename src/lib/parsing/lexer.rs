@@ -3,13 +3,11 @@ use crate::lib::parsing::reader::*;
 #[derive(Debug, Clone)]
 pub struct Token {
     pub token_type: TokenType,
-    pub data: String
-} impl Token {
-    pub fn new (token_type: TokenType, data: String) -> Token {
-        Token {
-            token_type,
-            data,
-        }
+    pub data: String,
+}
+impl Token {
+    pub fn new(token_type: TokenType, data: String) -> Token {
+        Token { token_type, data }
     }
 
     pub fn from_char(token_type: TokenType, c: char) -> Token {
@@ -36,7 +34,9 @@ pub enum TokenType {
     ReturnType,
     Operator,
     EOF,
-} impl TokenType {
+}
+
+impl TokenType {
     pub fn label(&self) -> &str {
         match self {
             TokenType::OpenBrace => "Open Brace",
@@ -51,7 +51,7 @@ pub enum TokenType {
             TokenType::Whitespace => "Whitespace",
             TokenType::ReturnType => "Return Type",
             TokenType::Operator => "Operator",
-            _ => "Undefined"
+            _ => "Undefined",
         }
     }
 }
@@ -72,10 +72,12 @@ static KEYWORDS: &[&str] = &[
 
 pub struct Lexer {
     reader: Reader,
-} impl Lexer {
-    pub fn new (s: String) -> Lexer {
+}
+
+impl Lexer {
+    pub fn new(s: String) -> Lexer {
         Lexer {
-            reader : Reader::new(s)
+            reader: Reader::new(s),
         }
     }
 
@@ -94,14 +96,13 @@ pub struct Lexer {
             Token::from_type(TokenType::EOF)
         } else {
             let c: char = self.reader.next();
-            let mut tt : TokenType = self.scan(c);
+            let mut tt: TokenType = self.scan(c);
             match tt {
-                TokenType::OpenParenthesis |
-                TokenType::CloseParenthesis |
-                TokenType::OpenBrace |
-                TokenType::CloseBrace |
-                TokenType::Semicolon
-                    => Token::from_char(tt,c),
+                TokenType::OpenParenthesis
+                | TokenType::CloseParenthesis
+                | TokenType::OpenBrace
+                | TokenType::CloseBrace
+                | TokenType::Semicolon => Token::from_char(tt, c),
                 TokenType::Operator => {
                     if ((c == '-') | (c == '=')) && (self.reader.peek() == '>') {
                         self.reader.next();
@@ -112,7 +113,7 @@ pub struct Lexer {
                     } else {
                         Token::from_char(tt, c)
                     }
-                }
+                },
                 TokenType::Identifier => {
                     let mut s: String = self.read_while(Lexer::is_alphanumeric);
                     s.insert(0, c);
@@ -130,9 +131,9 @@ pub struct Lexer {
                 },
                 TokenType::Whitespace => {
                     self.read_while(Lexer::is_whitespace);
-                    Token::new(tt,String::new())
+                    Token::new(tt, String::new())
                 },
-                _ => Token::new(tt,String::from(""))
+                _ => Token::new(tt, String::from("")),
             }
         }
     }
@@ -153,7 +154,7 @@ pub struct Lexer {
         c.is_whitespace()
     }
 
-    pub fn scan(&self, c: char) -> TokenType  {
+    pub fn scan(&self, c: char) -> TokenType {
         if c == '{' {
             TokenType::OpenBrace
         } else if c == '}' {
