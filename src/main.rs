@@ -1,6 +1,5 @@
-mod lib;
 use std::fs;
-use lib::parsing::lexer::*;
+use rust_compiler::parsing::lexer::*;
 
 fn main() {
     let s: String = fs::read_to_string("sample/main.rs").unwrap();

@@ -25,7 +25,7 @@ impl Reader {
         }else {
             self.col += 1;
         }
-        
+
         c
     }
 
