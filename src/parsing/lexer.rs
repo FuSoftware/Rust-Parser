@@ -1,50 +1,33 @@
 use crate::parsing::reader::*;
+use std::fmt::{ self, Display, Formatter };
 
 #[derive(Debug, Clone)]
-pub struct Token {
-    pub token_type: TokenType,
-    pub data: String,
-}
-
-impl Token {
-    pub fn new(token_type: TokenType, data: String) -> Token {
-        Token { token_type, data }
-        }
-
-    pub fn from_char(token_type: TokenType, c: char) -> Token {
-        Token::new(token_type, c.to_string())
-    }
-    }
-
-#[derive(Debug, Copy, Clone)]
-pub enum TokenType {
+pub enum Token {
+    Integer(String),
+    Identifier(String),
+    Keyword(String),
+    Operator(String),
     OpenBrace,
     CloseBrace,
     OpenParenthesis,
     CloseParenthesis,
-    Identifier,
     Semicolon,
-    Keyword,
-    Integer,
-    Invalid,
-    ReturnType,
-    Operator,
+    Invalid(char),
 }
 
-impl TokenType {
-    pub fn label(&self) -> &str {
+impl Display for Token {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         match self {
-            TokenType::OpenBrace => "Open Brace",
-            TokenType::CloseBrace => "Close Brace",
-            TokenType::OpenParenthesis => "Open Parenthesis",
-            TokenType::CloseParenthesis => "Close Parenthesis",
-            TokenType::Identifier => "Identifier",
-            TokenType::Semicolon => "Semicolon",
-            TokenType::Keyword => "Keyword",
-            TokenType::Integer => "Integer",
-            TokenType::Invalid => "Invalid",
-            TokenType::ReturnType => "Return Type",
-            TokenType::Operator => "Operator",
+            Token::Integer(data) => write!(f, "{}", data),
+            Token::Identifier(data) => write!(f, "{}", data),
+            Token::Keyword(data) => write!(f, "{}", data),
+            Token::Operator(data) => write!(f, "{}", data),
+            Token::OpenBrace => write!(f, "{{"),
+            Token::CloseBrace => write!(f, "}}"),
+            Token::OpenParenthesis => write!(f, "("),
+            Token::CloseParenthesis => write!(f, ")"),
+            Token::Semicolon => write!(f, ";"),
+            Token::Invalid(c) => write!(f, "{}", c),
         }
     }
 }
@@ -94,34 +77,32 @@ impl<'a> Iterator for Lexer<'a> {
             .by_ref()
             .find(|c| !c.is_whitespace())
             .map(|c: char| match c {
-            '(' => Token::from_char(TokenType::OpenParenthesis, c),
-            ')' => Token::from_char(TokenType::CloseParenthesis, c),
-            '{' => Token::from_char(TokenType::OpenBrace, c),
-            '}' => Token::from_char(TokenType::CloseBrace, c),
-            ';' => Token::from_char(TokenType::Semicolon, c),
-            '-' | '=' if self.reader.peek() == Some('>') => {
-                self.reader.next();
-                Token::new(TokenType::Keyword, format!("{}{}", c, '>'))
-            },
-            c if is_operator(c) => Token::from_char(TokenType::Operator, c),
-            c if is_integer(c) => {
-                let mut s: String = self.reader.read_while(is_integer);
-                s.insert(0, c);
-                Token::new(TokenType::Integer, s)
-            },
-            c if is_alphanumeric(c) => {
-                let mut s: String = self.reader.read_while(is_alphanumeric);
-                s.insert(0, c);
+                '(' => Token::OpenParenthesis,
+                ')' => Token::CloseParenthesis,
+                '{' => Token::OpenBrace,
+                '}' => Token::CloseBrace,
+                ';' => Token::Semicolon,
+                '-' | '=' if self.reader.peek() == Some('>') => {
+                    self.reader.next();
+                    Token::Keyword(format!("{}{}", c, '>'))
+                },
+                c if is_operator(c) => Token::Operator(c.to_string()),
+                c if is_integer(c) => {
+                    let mut s: String = self.reader.read_while(is_integer);
+                    s.insert(0, c);
+                    Token::Integer(s)
+                },
+                c if is_alphanumeric(c) => {
+                    let mut s: String = self.reader.read_while(is_alphanumeric);
+                    s.insert(0, c);
 
-                let tt = if KEYWORDS.contains(&s.as_str()) {
-                    TokenType::Keyword
-                } else {
-                    TokenType::Identifier
-                };
-
-                Token::new(tt, s)
-            },
-            c => Token::from_char(TokenType::Invalid, c),
-        })
+                    if KEYWORDS.contains(&s.as_str()) {
+                        Token::Keyword(s)
+                    } else {
+                        Token::Identifier(s)
+                    }
+                },
+                c => Token::Invalid(c),
+            })
     }
 }
