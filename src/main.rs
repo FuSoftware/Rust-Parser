@@ -5,7 +5,7 @@ use std::fs;
 fn main() {
     let s: String = fs::read_to_string("sample/main.rs").unwrap();
     println!("{}", s);
-    let mut l: Lexer = Lexer::new(s);
+    let mut l: Lexer = Lexer::new(&s);
     let mut v: Vec<Token> = Vec::new();
 
     loop {

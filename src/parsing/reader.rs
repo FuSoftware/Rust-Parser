@@ -1,12 +1,12 @@
-pub struct Reader {
+pub struct Reader<'a> {
     pos: usize,
     col: usize,
     row: usize,
-    input: String,
+    input: &'a str,
 }
 
-impl Reader {
-    pub fn new(input: String) -> Reader {
+impl<'a> Reader<'a> {
+    pub fn new(input: &'a str) -> Self {
         Reader {
             pos: 0,
             col: 0,
@@ -49,6 +49,6 @@ impl Reader {
         self.pos = 0;
         self.row = 0;
         self.col = 0;
-        self.input = String::from("");
+        self.input = "";
     }
 }

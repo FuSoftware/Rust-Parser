@@ -70,12 +70,12 @@ static KEYWORDS: &[&str] = &[
     "->",
 ];
 
-pub struct Lexer {
-    reader: Reader,
+pub struct Lexer<'a> {
+    reader: Reader<'a>,
 }
 
-impl Lexer {
-    pub fn new(s: String) -> Lexer {
+impl<'a> Lexer<'a> {
+    pub fn new (s: &'a str) -> Self {
         Lexer {
             reader: Reader::new(s),
         }
