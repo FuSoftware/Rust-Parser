@@ -1,4 +1,4 @@
-use crate::lib::parsing::reader::*;
+use crate::parsing::reader::*;
 
 #[derive(Debug, Clone)]
 pub struct Token {
