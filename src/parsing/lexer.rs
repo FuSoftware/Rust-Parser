@@ -14,11 +14,7 @@ impl Token {
     pub fn from_char(token_type: TokenType, c: char) -> Token {
         Token::new(token_type, c.to_string())
     }
-
-    pub fn from_type(token_type: TokenType) -> Token {
-        Token::new(token_type, String::new())
     }
-}
 
 #[derive(Debug, Copy, Clone)]
 pub enum TokenType {
@@ -31,7 +27,6 @@ pub enum TokenType {
     Keyword,
     Integer,
     Invalid,
-    Whitespace,
     ReturnType,
     Operator,
 }
@@ -48,7 +43,6 @@ impl TokenType {
             TokenType::Keyword => "Keyword",
             TokenType::Integer => "Integer",
             TokenType::Invalid => "Invalid",
-            TokenType::Whitespace => "Whitespace",
             TokenType::ReturnType => "Return Type",
             TokenType::Operator => "Operator",
         }
@@ -74,7 +68,7 @@ pub struct Lexer<'a> {
 }
 
 impl<'a> Lexer<'a> {
-    pub fn new (s: &'a str) -> Self {
+    pub fn new(s: &'a str) -> Self {
         Lexer {
             reader: Reader::new(s),
         }
@@ -93,14 +87,13 @@ pub fn is_alphanumeric(c: char) -> bool {
     c.is_ascii_alphanumeric()
 }
 
-pub fn is_whitespace(c: char) -> bool {
-    c.is_whitespace()
-}
-
 impl<'a> Iterator for Lexer<'a> {
     type Item = Token;
     fn next(&mut self) -> Option<Token> {
-        self.reader.next().map(|c: char| match c {
+        self.reader
+            .by_ref()
+            .find(|c| !c.is_whitespace())
+            .map(|c: char| match c {
             '(' => Token::from_char(TokenType::OpenParenthesis, c),
             ')' => Token::from_char(TokenType::CloseParenthesis, c),
             '{' => Token::from_char(TokenType::OpenBrace, c),
@@ -127,10 +120,6 @@ impl<'a> Iterator for Lexer<'a> {
                 };
 
                 Token::new(tt, s)
-            },
-            c if is_whitespace(c) => {
-                self.reader.read_while(is_whitespace);
-                Token::from_type(TokenType::Whitespace)
             },
             c => Token::from_char(TokenType::Invalid, c),
         })
