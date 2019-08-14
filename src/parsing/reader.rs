@@ -22,7 +22,9 @@ impl<'a> Iterator for Reader<'a> {
         next
     }
 
-    fn size_hint(&self) -> (usize, Option<usize>) { self.input.size_hint() }
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.input.size_hint()
+    }
 }
 
 impl<'a> Reader<'a> {
@@ -38,7 +40,7 @@ impl<'a> Reader<'a> {
     pub fn peek(&self) -> Option<char> {
         self.input.clone().next()
     }
-    
+
     pub fn read_while(&mut self, f: impl Fn(char) -> bool) -> String {
         let mut s: String = String::new();
 

@@ -3,16 +3,13 @@ use crate::parsing::reader::*;
 #[derive(Debug, Clone)]
 pub struct Token {
     pub token_type: TokenType,
-    pub data: String
+    pub data: String,
 }
 
 impl Token {
-    pub fn new (token_type: TokenType, data: String) -> Token {
-        Token {
-            token_type,
-            data,
+    pub fn new(token_type: TokenType, data: String) -> Token {
+        Token { token_type, data }
         }
-    }
 
     pub fn from_char(token_type: TokenType, c: char) -> Token {
         Token::new(token_type, c.to_string())
