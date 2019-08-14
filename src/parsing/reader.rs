@@ -1,8 +1,28 @@
+use std::str::Chars;
+
 pub struct Reader<'a> {
     pos: usize,
     col: usize,
     row: usize,
-    input: &'a str,
+    input: Chars<'a>,
+}
+
+impl<'a> Iterator for Reader<'a> {
+    type Item = char;
+    fn next(&mut self) -> Option<char> {
+        let next = self.input.next();
+        self.pos += 1;
+
+        if next == Some('\n') {
+            self.row += 1;
+            self.col = 0;
+        } else {
+            self.col += 1;
+        }
+        next
+    }
+
+    fn size_hint(&self) -> (usize, Option<usize>) { self.input.size_hint() }
 }
 
 impl<'a> Reader<'a> {
@@ -11,44 +31,21 @@ impl<'a> Reader<'a> {
             pos: 0,
             col: 0,
             row: 0,
-            input,
+            input: input.chars(),
         }
     }
 
-    pub fn next(&mut self) -> char {
-        let c: char = self.peek();
-        self.pos += 1;
+    pub fn peek(&self) -> Option<char> {
+        self.input.clone().next()
+    }
+    
+    pub fn read_while(&mut self, f: impl Fn(char) -> bool) -> String {
+        let mut s: String = String::new();
 
-        if c == '\n' {
-            self.row += 1;
-            self.col = 0;
-        } else {
-            self.col += 1;
+        while self.peek().map_or(false, &f) {
+            s.push(self.next().unwrap());
         }
 
-        c
-    }
-
-    pub fn peek(&self) -> char {
-        self.peek_offset(0)
-    }
-
-    pub fn peek_offset(&self, offset: usize) -> char {
-        self.input.chars().nth(self.pos + offset).unwrap()
-    }
-
-    pub fn eof(&self) -> bool {
-        self.pos >= self.input.len()
-    }
-
-    pub fn remaining(&self) -> usize {
-        self.input.len() - self.pos
-    }
-
-    pub fn clear(&mut self) {
-        self.pos = 0;
-        self.row = 0;
-        self.col = 0;
-        self.input = "";
+        s
     }
 }
