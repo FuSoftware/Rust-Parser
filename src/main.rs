@@ -1,5 +1,5 @@
-mod lib;
-use lib::parsing::lexer::*;
+use rust_compiler::parsing::lexer::Lexer;
+use rust_compiler::parsing::token::Token;
 use std::fs;
 
 fn main() {
