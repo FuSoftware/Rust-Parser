@@ -2,7 +2,7 @@ pub struct Reader {
     pos: usize,
     col: usize,
     row: usize,
-    input: String
+    input: String,
 }
 
 impl Reader {
@@ -22,7 +22,7 @@ impl Reader {
         if c == '\n' {
             self.row += 1;
             self.col = 0;
-        }else {
+        } else {
             self.col += 1;
         }
 
