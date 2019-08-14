@@ -11,21 +11,22 @@ impl Reader {
             pos: 0,
             col: 0,
             row: 0,
-            input: input,
+            input,
         }
     }
 
     pub fn next(&mut self) -> char {
         let c: char = self.peek();
-        self.pos = self.pos + 1;
+        self.pos += 1;
 
         if c == '\n' {
-            self.row = self.row + 1;
+            self.row += 1;
             self.col = 0;
         }else {
-            self.col = self.col + 1;
+            self.col += 1;
         }
-        return c;
+        
+        c
     }
 
     pub fn peek(&self) -> char {
