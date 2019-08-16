@@ -1,54 +1,53 @@
-pub struct Reader {
+use std::str::Chars;
+
+pub struct Reader<'a> {
     pos: usize,
     col: usize,
     row: usize,
-    input: String,
+    input: Chars<'a>,
 }
 
-impl Reader {
-    pub fn new(input: String) -> Reader {
-        Reader {
-            pos: 0,
-            col: 0,
-            row: 0,
-            input,
-        }
-    }
-
-    pub fn next(&mut self) -> char {
-        let c: char = self.peek();
+impl<'a> Iterator for Reader<'a> {
+    type Item = char;
+    fn next(&mut self) -> Option<char> {
+        let next = self.input.next();
         self.pos += 1;
 
-        if c == '\n' {
+        if next == Some('\n') {
             self.row += 1;
             self.col = 0;
         } else {
             self.col += 1;
         }
-
-        c
+        next
     }
 
-    pub fn peek(&self) -> char {
-        self.peek_offset(0)
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.input.size_hint()
+    }
+}
+
+impl<'a> Reader<'a> {
+    pub fn new(input: &'a str) -> Self {
+        Reader {
+            pos: 0,
+            col: 0,
+            row: 0,
+            input: input.chars(),
+        }
     }
 
-    pub fn peek_offset(&self, offset: usize) -> char {
-        self.input.chars().nth(self.pos + offset).unwrap()
+    pub fn peek(&self) -> Option<char> {
+        self.input.clone().next()
     }
 
-    pub fn eof(&self) -> bool {
-        self.pos >= self.input.len()
-    }
+    pub fn read_while(&mut self, f: impl Fn(char) -> bool) -> String {
+        let mut s: String = String::new();
 
-    pub fn remaining(&self) -> usize {
-        self.input.len() - self.pos
-    }
+        while self.peek().map_or(false, &f) {
+            s.push(self.next().unwrap());
+        }
 
-    pub fn clear(&mut self) {
-        self.pos = 0;
-        self.row = 0;
-        self.col = 0;
-        self.input = String::from("");
+        s
     }
 }
